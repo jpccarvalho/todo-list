@@ -244,4 +244,28 @@ public class ChoreServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("#readJson > test the reading of a json file")
+    void testJsonFileReading() {
+        ChoreService service = new ChoreService();
+        ChoreService service2 = new ChoreService();
+        service.readJson();
+        service2.getChores().add(new Chore("Voltar para a cidade natal", Boolean.TRUE, LocalDate.of(2023, 10, 7)));
+        service2.getChores().add(new Chore("Assistir a aula de Gestao do Ciclo de Vida da Aplicacao", Boolean.FALSE, LocalDate.of(2023, 10, 11)));
+        service2.getChores().add(new Chore("Entregar a atividade proposta", Boolean.FALSE, LocalDate.of(2023, 10, 18)));
+
+        assertAll(
+                () -> assertEquals(3, service.getChores().size()),
+                () -> {
+                    int idx = 0;
+                    for (Chore chore1 : service.getChores()){
+                        assertEquals(chore1.getDescription(), service2.getChores().get(idx).getDescription());
+                        assertEquals(chore1.getDeadline(), service2.getChores().get(idx).getDeadline());
+                        assertEquals(chore1.getIsCompleted(), service2.getChores().get(idx).getIsCompleted());
+                        idx++;
+                    }
+                }
+        );
+    }
+
 }
