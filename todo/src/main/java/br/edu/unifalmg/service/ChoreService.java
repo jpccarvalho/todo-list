@@ -3,7 +3,12 @@ package br.edu.unifalmg.service;
 import br.edu.unifalmg.domain.Chore;
 import br.edu.unifalmg.enumerator.ChoreFilter;
 import br.edu.unifalmg.exception.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -144,4 +149,16 @@ public class ChoreService {
 
     private final Predicate<List<Chore>> isChoreListEmpty = choreList -> choreList.isEmpty();
 
+    public List<Chore> readJson () {
+        File json = new File("./src/main/java/br/edu/unifalmg/resources/chores.json");
+        ObjectMapper map = new ObjectMapper().registerModule(new JavaTimeModule());
+
+        try {
+            this.chores = map.readValue(json, new TypeReference<List<Chore>>(){});
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+
+        return this.chores;
+    }
 }
